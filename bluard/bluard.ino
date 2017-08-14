@@ -1,162 +1,144 @@
 /* Developed by ATIE: Kevin Prakash, Akshit Bhalla, Goutham Swaminathan, Mohit Ashwath
  * 
- * Arduino UNO program for 4 wheel RC Car
+ * Arduino program for 4 wheel RC Car
  * 
- * Components:
+ * speedecifications:
  * 1. Bluetooth Module HC-05
  * 2. Motor Driver L293 - Qt. 2
  * 3. AAA Batteries - Qt. 6
  * 
  */
 
-
-
-
-
-// 1 :: left side
-// 2 :: right side
-// m#0# pin 1 motor driver
-// m#1# pin 2 motor driver
-
-int mf01=3; //mf :: front motor
-int mf02=4;
-int mb01=5; //mb :: back motor
-int mb02=6;
-int dir=0; // direction
-int mf11=7;
-int mf12=8;
-int mb11=9;
-int mb12=10;
+int leftMotorPin1=3;
+int leftMotorPin0=5;
+int rightMotorPin1=6;
+int rightMotorPin0=9;
+int direction=0;
+int speed=0;
+int extra=0;
 
 void setup()
 {
   Serial.begin(9600);
   delay(500);
-  pinMode(mf01,OUTPUT);
-  pinMode(mf02,OUTPUT);
-  pinMode(mb01,OUTPUT);
-  pinMode(mb02,OUTPUT);
-  pinMode(mf11,OUTPUT);
-  pinMode(mf12,OUTPUT);
-  pinMode(mb11,OUTPUT);
-  pinMode(mb12,OUTPUT);
+  pinMode(leftMotorPin1,OUTPUT);
+  pinMode(leftMotorPin0,OUTPUT);
+  pinMode(rightMotorPin1,OUTPUT);
+  pinMode(rightMotorPin0,OUTPUT);
 }
-
 void loop() 
 {
       if(Serial.available() > 0)
       {     
-        dir = Serial.read();   
+        if(int num=Serial.read()<60)
+        {
+            direction = num%10;
+            speed=num/10;
+        }
+        else
+            extra=num;
+           
       }  
-      switch(dir)
+      switch(direction)
       {
         case 1 :
-        digitalWrite(mf01,HIGH);
-        digitalWrite(mf02,HIGH);
-        digitalWrite(mb01,HIGH);
-        digitalWrite(mb02,HIGH);
-        digitalWrite(mf11,LOW);
-        digitalWrite(mf12,LOW);
-        digitalWrite(mb11,LOW);
-        digitalWrite(mb12,LOW);
-        Serial.println("N");
+            leftforward();
+            rightforward();
+            Serial.println("N");
         break;
 
         case 2:
-        digitalWrite(mf01,LOW);
-        digitalWrite(mf02,HIGH);
-        digitalWrite(mb01,LOW);
-        digitalWrite(mb02,HIGH);
-        digitalWrite(mf11,LOW);
-        digitalWrite(mf12,LOW);
-        digitalWrite(mb11,LOW);
-        digitalWrite(mb12,LOW);
-        Serial.println("NW");
+            leftstop();
+            rightforward();
+            Serial.println("NW");
         break;
 
         case 3:
-        digitalWrite(mf01,LOW);
-        digitalWrite(mf02,HIGH);
-        digitalWrite(mb01,LOW);
-        digitalWrite(mb02,HIGH);
-        digitalWrite(mf11,HIGH);
-        digitalWrite(mf12,LOW);
-        digitalWrite(mb11,HIGH);
-        digitalWrite(mb12,LOW);
-        Serial.println("W");
+            leftreverse();
+            rightforward();
+            Serial.println("W");
         break;
         
         case 4:
-        digitalWrite(mf01,LOW);
-        digitalWrite(mf02,LOW);
-        digitalWrite(mb01,LOW);
-        digitalWrite(mb02,LOW);
-        digitalWrite(mf11,LOW);
-        digitalWrite(mf12,HIGH);
-        digitalWrite(mb11,LOW);
-        digitalWrite(mb12,HIGH);
-        Serial.println("SW");
+            leftstop();
+            rightreverse();
+            Serial.println("SW");
         break;
         
         case 5:
-        digitalWrite(mf01,LOW);
-        digitalWrite(mf02,LOW);
-        digitalWrite(mb01,LOW);
-        digitalWrite(mb02,LOW);
-        digitalWrite(mf11,HIGH);
-        digitalWrite(mf12,HIGH);
-        digitalWrite(mb11,HIGH);
-        digitalWrite(mb12,HIGH);
-        Serial.println("S");
+            leftreverse();
+            rightreverse();
+            Serial.println("S");
         break;
 
         case 6:
-        digitalWrite(mf01,LOW);
-        digitalWrite(mf02,LOW);
-        digitalWrite(mb01,LOW);
-        digitalWrite(mb02,LOW);
-        digitalWrite(mf11,HIGH);
-        digitalWrite(mf12,LOW);
-        digitalWrite(mb11,HIGH);
-        digitalWrite(mb12,LOW);
+           rightstop();
+           leftreverse();
         Serial.println("SE");
         break;
 
        case 7:
-        digitalWrite(mf01,HIGH);
-        digitalWrite(mf02,LOW);
-        digitalWrite(mb01,HIGH);
-        digitalWrite(mb02,LOW);
-        digitalWrite(mf11,LOW);
-        digitalWrite(mf12,LOW);
-        digitalWrite(mb11,LOW);
-        digitalWrite(mb12,LOW);
+            leftforward();
+            rightreverse();
         Serial.println("E");
         break;
 
         case 8:
-        digitalWrite(mf01,HIGH);
-        digitalWrite(mf02,LOW);
-        digitalWrite(mb01,HIGH);
-        digitalWrite(mb02,LOW);
-        digitalWrite(mf11,LOW);
-        digitalWrite(mf12,HIGH);
-        digitalWrite(mb11,LOW);
-        digitalWrite(mb12,HIGH);
+            leftforward();
+            rightstop();
         Serial.println("NE");
         break;
 
         default:
-        digitalWrite(mf01,LOW);
-        digitalWrite(mf02,LOW);
-        digitalWrite(mb01,LOW);
-        digitalWrite(mb02,LOW);
-        digitalWrite(mf11,LOW);
-        digitalWrite(mf12,LOW);
-        digitalWrite(mb11,LOW);
-        digitalWrite(mb12,LOW);
+            leftstop();
+            rightstop();
         Serial.println("OFF");
         break;
       }
        delay(500);  
+}
+
+void leftforward(void)
+{
+    analogWrite(leftMotorPin0,0);
+    analogWrite(leftMotorPin1,0);
+    delay(100);
+    analogWrite(leftMotorPin0,speed);
+    analogWrite(leftMotorPin1,0);
+}
+
+void leftreverse(void)
+{
+    analogWrite(leftMotorPin0,0);
+    analogWrite(leftMotorPin1,0);
+    delay(100);
+    analogWrite(leftMotorPin0,0);
+    analogWrite(leftMotorPin1,speed);
+}
+void leftstop(void)
+{
+    analogWrite(leftMotorPin0,0);
+    analogWrite(leftMotorPin1,0);
+}
+
+void rightforward(void)
+{
+    analogWrite(rightMotorPin0,0);
+    analogWrite(rightMotorPin1,0);
+    delay(100);
+    analogWrite(rightMotorPin0,speed);
+    analogWrite(rightMotorPin1,0);
+}
+void rightreverse(void)
+{
+    analogWrite(rightMotorPin0,0);
+    analogWrite(rightMotorPin1,0);
+    delay(100);
+    analogWrite(rightMotorPin0,0);
+    analogWrite(rightMotorPin1,speed);
+}
+void rightstop(void)
+{
+    analogWrite(rightMotorPin0,0);
+    analogWrite(rightMotorPin1,0);
 }
