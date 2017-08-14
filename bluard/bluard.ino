@@ -2,7 +2,7 @@
  * 
  * Arduino program for 4 wheel RC Car
  * 
- * speedecifications:
+ * Specifications:
  * 1. Bluetooth Module HC-05
  * 2. Motor Driver L293 - Qt. 2
  * 3. AAA Batteries - Qt. 6
