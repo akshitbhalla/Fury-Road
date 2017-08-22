@@ -1,4 +1,4 @@
-/* Developed by ATIE: Kevin Prakash, Akshit Bhalla, Goutham Swaminathan, Mohit Ashwath
+/* Developed by Kevin Prakash, Akshit Bhalla
  * 
  * Arduino program for 4 wheel RC Car
  * 
