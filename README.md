@@ -1,2 +1,3 @@
-# Fury-Road
-RC Car Code | PhaseShift
+### Arduino Code for an RC Car
+
+Used at the PhaseShift competition at BMSCE.
